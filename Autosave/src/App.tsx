@@ -37,9 +37,18 @@ function App() {
         if (debounceTimer.current) clearTimeout(debounceTimer.current);
         debounceTimer.current = setTimeout(async () => {
             setSaveState('saving');
-            await saveSlides(slidesRef.current);
-            setSaveState('saved');
-            refreshStorageEstimate();
+            try {
+                await saveSlides(slidesRef.current);
+                setSaveState('saved');
+                refreshStorageEstimate();
+            } catch (err) {
+                setSaveState('idle');
+                if (isQuotaError(err)) {
+                    alert('Storage quota exceeded. Free up space by deleting media files.');
+                } else {
+                    throw err;
+                }
+            }
         }, DEBOUNCE_MS);
     }
 
@@ -69,10 +78,30 @@ function App() {
     async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
         if (!file) return;
-        await addMedia(file);
-        setMedia(await loadAllMedia());
         e.target.value = '';
-        refreshStorageEstimate();
+
+        const est = await navigator.storage.estimate();
+        const free = (est.quota ?? 0) - (est.usage ?? 0);
+        if (file.size > free) {
+            alert(
+                `Not enough storage space.\n` +
+                `File size: ${formatBytes(file.size)}\n` +
+                `Available: ${formatBytes(free)}`
+            );
+            return;
+        }
+
+        try {
+            await addMedia(file);
+            setMedia(await loadAllMedia());
+            refreshStorageEstimate();
+        } catch (err) {
+            if (isQuotaError(err)) {
+                alert('Storage quota exceeded. Free up space by deleting media files.');
+            } else {
+                throw err;
+            }
+        }
     }
 
     async function handleDeleteMedia(id: number) {
@@ -185,6 +214,10 @@ function App() {
             </ul>
         </div>
     );
+}
+
+function isQuotaError(err: unknown): boolean {
+    return err instanceof DOMException && err.name === 'QuotaExceededError';
 }
 
 function formatBytes(bytes: number): string {
