@@ -1,23 +1,13 @@
-import {Mosaic, MosaicWindow} from 'react-mosaic-component';
-import 'react-mosaic-component/react-mosaic-component.css';
+import {Group, Panel, Separator} from 'react-resizable-panels';
+import './App.css';
 
 export function App() {
     return (
-        <div style={{height: '100vh'}}>
-            <Mosaic<string>
-                renderTile={(id, path) => (
-                    <MosaicWindow<string> path={path} title={`Panel ${id}`}>
-                        <div style={{padding: 20}}>Contents of {id}</div>
-                    </MosaicWindow>
-                )}
-                initialValue={{
-                    type: 'split',
-                    direction: 'row',
-                    children: ['A', 'B'],
-                }}
-            />
-        </div>
+        <Group orientation="horizontal" style={{height: '100dvh'}}>
+            <Panel minSize={15}>Left</Panel>
+            <Separator className="resize-handle is-horizontal" />
+            <Panel minSize={15}>Right</Panel>
+        </Group>
     );
 }
-
 export default App

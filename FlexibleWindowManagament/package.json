@@ -12,7 +12,7 @@
   "dependencies": {
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-mosaic-component": "^7.0.0-beta0"
+    "react-resizable-panels": "^4.12.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
