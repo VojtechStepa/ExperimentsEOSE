@@ -3,9 +3,9 @@ import { Group, Panel, Separator } from 'react-resizable-panels';
 import type { Node } from './tree';
 
 export interface PaneHandler {
-    onSplitH: (id: string) => void;
-    onSplitV: (id: string) => void;
-    onRemove: (id: string) => void;
+    onSplitH: (id: number) => void;
+    onSplitV: (id: number) => void;
+    onRemove: (id: number) => void;
     canDelete: boolean;
 }
 
@@ -35,12 +35,12 @@ export const PaneNode = memo(function PaneNode({ node, handlers }: PaneNodeProps
         orientation === 'horizontal' ? 'resize-handle is-horizontal' : 'resize-handle is-vertical';
 
     return (
-        <Group id={node.id} orientation={orientation} style={{ height: '100%' }}>
-            <Panel id={node.left!.id} key={node.left!.id} minSize={10}>
+        <Group id={String(node.id)} orientation={orientation} style={{ height: '100%' }}>
+            <Panel id={String(node.left!.id)} key={node.left!.id} minSize={10}>
                 <PaneNode node={node.left!} handlers={handlers} />
             </Panel>
             <Separator className={separatorClass} />
-            <Panel id={node.right!.id} key={node.right!.id} minSize={10}>
+            <Panel id={String(node.right!.id)} key={node.right!.id} minSize={10}>
                 <PaneNode node={node.right!} handlers={handlers} />
             </Panel>
         </Group>
