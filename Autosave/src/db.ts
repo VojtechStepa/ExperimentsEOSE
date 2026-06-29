@@ -1,6 +1,6 @@
 const DB_NAME = 'autosave-demo';
 const STORE = 'content';
-const KEY = 'text';
+const SLIDES_KEY = 'slides';
 
 function openDb(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
@@ -11,21 +11,21 @@ function openDb(): Promise<IDBDatabase> {
     });
 }
 
-export async function loadText(): Promise<string | null> {
+export async function loadSlides(): Promise<string[] | null> {
     const db = await openDb();
     return new Promise((resolve, reject) => {
         const tx = db.transaction(STORE, 'readonly');
-        const req = tx.objectStore(STORE).get(KEY);
+        const req = tx.objectStore(STORE).get(SLIDES_KEY);
         req.onsuccess = () => resolve(req.result ?? null);
         req.onerror = () => reject(req.error);
     });
 }
 
-export async function saveText(text: string): Promise<void> {
+export async function saveSlides(slides: string[]): Promise<void> {
     const db = await openDb();
     return new Promise((resolve, reject) => {
         const tx = db.transaction(STORE, 'readwrite');
-        tx.objectStore(STORE).put(text, KEY);
+        tx.objectStore(STORE).put(slides, SLIDES_KEY);
         tx.oncomplete = () => resolve();
         tx.onerror = () => reject(tx.error);
     });
