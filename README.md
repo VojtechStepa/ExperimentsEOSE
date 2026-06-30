@@ -2,6 +2,12 @@
 
 This repository contains multiple experiments, which are related to [EOSE](https://github.com/VojtechStepa/ExtendedOpenSlides). Each experiment has its own subdirectory and the experiments are independent at each other.
 
+You can execute the experiment by navigating to its root and running
+
+~~~bash
+npm run dev
+~~~
+
 ## Autosave experiment
 
 Aim of this experiment was to decide, if it will possible to implement
