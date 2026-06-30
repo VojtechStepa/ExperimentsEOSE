@@ -6,9 +6,22 @@ import { csvCallback } from './csvCallback'
 const parser = new MarkdownParser(markdownit())
 parser.AddMediaType('.csv', csvCallback)
 
+const initialContent = `# Import experiments
+## External picture
+
+![MFF UK](https://www.mff.cuni.cz/modules/MatFyzWeb/design25/images/mff-uk-logo-en.svg)
+
+## Local pictures
+
+![SMF](logo_samotne.svg)
+
+## Local custom file type
+
+![cars](myCars.csv)`
+
 function App() {
     const textareaRef = useRef<HTMLTextAreaElement>(null)
-    const [renderedHtml, setRenderedHtml] = useState('')
+    const [renderedHtml, setRenderedHtml] = useState(() => parser.parse(initialContent))
 
     function handleRender() {
         const text = textareaRef.current?.value ?? ''
@@ -20,8 +33,8 @@ function App() {
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '1rem', gap: '0.5rem' }}>
                 <textarea
                     ref={textareaRef}
+                    defaultValue={initialContent}
                     style={{ flex: 1, resize: 'none', fontFamily: 'monospace' }}
-                    placeholder="Enter markdown here..."
                 />
                 <button onClick={handleRender}>Render</button>
             </div>
