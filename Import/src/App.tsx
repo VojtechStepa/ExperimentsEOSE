@@ -1,8 +1,10 @@
 import { useState, useRef } from 'react'
 import markdownit from 'markdown-it'
 import MarkdownParser from './MarkdownParser'
+import { csvCallback } from './csvCallback'
 
 const parser = new MarkdownParser(markdownit())
+parser.AddMediaType('.csv', csvCallback)
 
 function App() {
     const textareaRef = useRef<HTMLTextAreaElement>(null)
